@@ -16,21 +16,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'زاد / Zad',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
-        ),
+        title: const Text('زاد / Zad'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.account_circle_outlined, color: Colors.white),
+            icon: const Icon(Icons.account_circle_outlined),
             onPressed: () {
               HapticService.light();
               context.push('/settings');
@@ -47,16 +37,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
               const SizedBox(height: 10),
               _buildBudgetCard(),
               const SizedBox(height: 32),
-              const Text(
+              Text(
                 'الخدمات الأساسية',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
               _buildFeatureGrid(),
               const SizedBox(height: 32),
-              const Text(
+              Text(
                 'تنبيهات المدرب / Coach Alerts',
-                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
               _buildAlertCard('Emotional Spend Detected', 'You spent 150 EGP on Coffee after a late work meeting.', Colors.orange),
@@ -72,9 +66,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           HapticService.medium();
           context.push('/coach');
         },
-        backgroundColor: Colors.indigoAccent,
-        icon: const Icon(Icons.auto_awesome, color: Colors.white),
-        label: const Text('اسأل زاد', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        icon: const Icon(Icons.auto_awesome),
+        label: const Text('اسأل زاد'),
       ).animate().scale(delay: 1.seconds).shimmer(delay: 2.seconds),
     );
   }
@@ -86,19 +79,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            const Text(
+            Text(
               'الميزانية المتبقية',
-              style: TextStyle(color: Colors.white70, fontSize: 16),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white70,
+                  ),
             ),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               '1,750.00 ج.م',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-              ),
-            ).animate().shimmer(duration: 2.seconds, color: Colors.indigoAccent),
+              style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+            ).animate().shimmer(duration: 2.seconds, color: Theme.of(context).colorScheme.primary),
             const SizedBox(height: 24),
             ClipRRect(
               borderRadius: BorderRadius.circular(10),

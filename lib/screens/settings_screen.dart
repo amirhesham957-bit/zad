@@ -8,24 +8,22 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
-        title: const Text('الإعدادات', style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.transparent,
+        title: const Text('الإعدادات'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          _buildProfileHeader(),
+          _buildProfileHeader(context),
           const SizedBox(height: 32),
-          _buildSectionTitle('الحساب'),
-          _buildSettingsTile(Icons.person_outline, 'الملف الشخصي', () {}),
-          _buildSettingsTile(Icons.notifications_none, 'التنبيهات', () {}),
-          _buildSettingsTile(Icons.security, 'الأمان', () {}),
+          _buildSectionTitle(context, 'الحساب'),
+          _buildSettingsTile(context, Icons.person_outline, 'الملف الشخصي', () {}),
+          _buildSettingsTile(context, Icons.notifications_none, 'التنبيهات', () {}),
+          _buildSettingsTile(context, Icons.security, 'الأمان', () {}),
           const SizedBox(height: 32),
-          _buildSectionTitle('قانوني'),
-          _buildSettingsTile(Icons.privacy_tip_outlined, 'سياسة الخصوصية', () => context.push('/settings/privacy')),
-          _buildSettingsTile(Icons.description_outlined, 'شروط الاستخدام', () => context.push('/settings/terms')),
+          _buildSectionTitle(context, 'قانوني'),
+          _buildSettingsTile(context, Icons.privacy_tip_outlined, 'سياسة الخصوصية', () => context.push('/settings/privacy')),
+          _buildSettingsTile(context, Icons.description_outlined, 'شروط الاستخدام', () => context.push('/settings/terms')),
           const SizedBox(height: 40),
           _buildLogoutButton(),
         ],
@@ -33,42 +31,53 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(BuildContext context) {
     return Column(
       children: [
         CircleAvatar(
           radius: 50,
-          backgroundColor: Colors.indigoAccent.withValues(alpha: 0.2),
-          child: const Text('AH', style: TextStyle(fontSize: 32, color: Colors.indigoAccent, fontWeight: FontWeight.bold)),
+          backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+          child: Text(
+            'AH',
+            style: TextStyle(
+              fontSize: 32,
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ).animate().scale(delay: 200.ms),
         const SizedBox(height: 16),
-        const Text(
+        Text(
           'أحمد هشام',
-          style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
-        const Text(
+        Text(
           'ahmed@example.com',
-          style: TextStyle(color: Colors.white38, fontSize: 14),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white38),
         ),
       ],
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12, left: 4),
       child: Text(
         title,
-        style: const TextStyle(color: Colors.indigoAccent, fontWeight: FontWeight.bold, fontSize: 14),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+        ),
       ),
     );
   }
 
-  Widget _buildSettingsTile(IconData icon, String title, VoidCallback onTap) {
+  Widget _buildSettingsTile(BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1E293B),
+        color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
       ),
       child: ListTile(
