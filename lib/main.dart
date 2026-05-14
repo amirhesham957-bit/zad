@@ -44,6 +44,7 @@ class ZadApp extends ConsumerWidget {
       theme: ThemeData(
         useMaterial3: true,
         brightness: Brightness.dark,
+        fontFamily: 'Plus Jakarta Sans',
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF6366F1),
           brightness: Brightness.dark,
@@ -51,7 +52,7 @@ class ZadApp extends ConsumerWidget {
           onSurface: Colors.white,
         ),
         scaffoldBackgroundColor: const Color(0xFF0F172A),
-        textTheme: GoogleFonts.interTextTheme(
+        textTheme: GoogleFonts.plusJakartaSansTextTheme(
           ThemeData.dark().textTheme,
         ).apply(
           bodyColor: Colors.white,
