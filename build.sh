@@ -1,14 +1,15 @@
 #!/bin/bash
 
-# Clone Flutter
+# Clone Flutter (shallow clone for speed)
 if [ ! -d "flutter" ]; then
-  git clone https://github.com/flutter/flutter.git -b stable flutter
+  git clone https://github.com/flutter/flutter.git -b stable --depth 1 flutter
 fi
 
 # Add Flutter to PATH
 export PATH="$PATH:`pwd`/flutter/bin"
 
 # Pre-download artifacts
+flutter precache --web
 flutter doctor
 
 # Run build
