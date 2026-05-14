@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import '../models/budget.dart';
-import '../models/item.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import '../components/glass_container.dart';
+
+import '../services/haptic_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -10,25 +13,15 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  // Mock Data for now
-  final Budget currentBudget = Budget(id: '1', totalBudget: 5000, spent: 3250);
-  
-  final List<Item> inventory = [
-    Item(id: '1', name: 'Milk', quantity: 1, minQuantity: 2, price: 5.0),
-    Item(id: '2', name: 'Eggs', quantity: 12, minQuantity: 6, price: 3.5),
-    Item(id: '3', name: 'Bread', quantity: 0, minQuantity: 1, price: 2.0),
-    Item(id: '4', name: 'Coffee Beans', quantity: 3, minQuantity: 1, price: 15.0),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F172A), // Deep Slate dark mode bg
+      backgroundColor: const Color(0xFF0F172A),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'Zad',
+          'زاد / Zad',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -38,220 +31,156 @@ class _DashboardScreenState extends State<DashboardScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.account_circle_outlined, color: Colors.white),
-            onPressed: () {},
+            onPressed: () {
+              HapticService.light();
+              context.push('/settings');
+            },
           )
         ],
       ),
       body: SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
               _buildBudgetCard(),
-              const SizedBox(height: 30),
+              const SizedBox(height: 32),
               const Text(
-                'Inventory Alerts',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                ),
+                'الخدمات الأساسية',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 15),
-              Expanded(child: _buildInventoryList()),
+              const SizedBox(height: 16),
+              _buildFeatureGrid(),
+              const SizedBox(height: 32),
+              const Text(
+                'تنبيهات المدرب / Coach Alerts',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              _buildAlertCard('Emotional Spend Detected', 'You spent 150 EGP on Coffee after a late work meeting.', Colors.orange),
+              const SizedBox(height: 12),
+              _buildAlertCard('Budget Goal Reached', 'You saved 500 EGP more than last month!', Colors.green),
+              const SizedBox(height: 100),
             ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // Open camera logic here
+          HapticService.medium();
+          context.push('/coach');
         },
-        backgroundColor: const Color(0xFF4F46E5), // Indigo Accent
-        icon: const Icon(Icons.document_scanner_outlined, color: Colors.white),
-        label: const Text('AI Scan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
+        backgroundColor: Colors.indigoAccent,
+        icon: const Icon(Icons.auto_awesome, color: Colors.white),
+        label: const Text('اسأل زاد', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ).animate().scale(delay: 1.seconds).shimmer(delay: 2.seconds),
     );
   }
 
   Widget _buildBudgetCard() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1E293B), // Slate 800
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFF334155), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF4F46E5).withOpacity(0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          )
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Remaining Budget',
-                style: TextStyle(color: Color(0xFF94A3B8), fontSize: 14, fontWeight: FontWeight.w500),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF4F46E5).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Text(
-                  'This Month',
-                  style: TextStyle(color: Color(0xFF818CF8), fontSize: 12, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '\$${currentBudget.remaining.toStringAsFixed(2)}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              letterSpacing: -1,
+    return GlassContainer(
+      opacity: 0.1,
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const Text(
+              'الميزانية المتبقية',
+              style: TextStyle(color: Colors.white70, fontSize: 16),
             ),
-          ),
-          const SizedBox(height: 24),
-          Stack(
-            children: [
-              Container(
-                height: 8,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF334155),
-                  borderRadius: BorderRadius.circular(4),
-                ),
+            const SizedBox(height: 12),
+            const Text(
+              '1,750.00 ج.م',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
               ),
-              FractionallySizedBox(
-                widthFactor: currentBudget.spentPercentage,
-                child: Container(
-                  height: 8,
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF818CF8), Color(0xFF4F46E5)],
-                    ),
-                    borderRadius: BorderRadius.circular(4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF4F46E5).withOpacity(0.5),
-                        blurRadius: 6,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                ),
+            ).animate().shimmer(duration: 2.seconds, color: Colors.indigoAccent),
+            const SizedBox(height: 24),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: const LinearProgressIndicator(
+                value: 0.65,
+                minHeight: 12,
+                backgroundColor: Colors.white10,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.indigoAccent),
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Spent: \$${currentBudget.spent.toStringAsFixed(0)}',
-                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
+            ).animate().fadeIn(delay: 400.ms).scaleX(),
+          ],
+        ),
+      ),
+    ).animate().fadeIn().slideY(begin: 0.2);
+  }
+
+  Widget _buildFeatureGrid() {
+    return GridView.count(
+      shrinkWrap: true,
+      crossAxisCount: 3,
+      crossAxisSpacing: 15,
+      mainAxisSpacing: 15,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        _buildFeatureItem('Coach', Icons.psychology_outlined, Colors.purpleAccent, () => context.push('/coach')),
+        _buildFeatureItem('Split', Icons.groups_outlined, Colors.blueAccent, () => context.push('/split')),
+        _buildFeatureItem('Goals', Icons.star_outline, Colors.amberAccent, () => context.push('/goals')),
+      ],
+    );
+  }
+
+  Widget _buildFeatureItem(String title, IconData icon, Color color, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: () {
+        HapticService.light();
+        onTap();
+      },
+      child: GlassContainer(
+        opacity: 0.05,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
-              Text(
-                'Total: \$${currentBudget.totalBudget.toStringAsFixed(0)}',
-                style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 13),
-              ),
-            ],
-          ),
-        ],
+              child: Icon(icon, color: color, size: 28),
+            ).animate().scale(delay: 500.ms),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildInventoryList() {
-    return ListView.separated(
-      itemCount: inventory.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final item = inventory[index];
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1E293B),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: item.isLowStock 
-                ? const Color(0xFFEF4444).withOpacity(0.5) 
-                : const Color(0xFF334155),
+  Widget _buildAlertCard(String title, String subtitle, Color color) {
+    return GlassContainer(
+      opacity: 0.05,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline, color: color),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  Text(subtitle, style: const TextStyle(color: Colors.white54, fontSize: 12)),
+                ],
+              ),
             ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: item.isLowStock
-                      ? const Color(0xFFEF4444).withOpacity(0.1)
-                      : const Color(0xFF334155).withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  item.isLowStock ? Icons.warning_amber_rounded : Icons.inventory_2_outlined,
-                  color: item.isLowStock ? const Color(0xFFF87171) : const Color(0xFF94A3B8),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Qty: ${item.quantity} (Min: ${item.minQuantity})',
-                      style: TextStyle(
-                        color: item.isLowStock ? const Color(0xFFF87171) : const Color(0xFF94A3B8),
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              if (item.isLowStock)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFEF4444).withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text(
-                    'Low Stock',
-                    style: TextStyle(
-                      color: Color(0xFFF87171),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-            ],
-          ),
-        );
-      },
-    );
+          ],
+        ),
+      ),
+    ).animate().fadeIn().slideX(begin: 0.1);
   }
 }
