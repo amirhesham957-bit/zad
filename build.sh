@@ -12,7 +12,7 @@ export PATH="$PATH:`pwd`/flutter/bin"
 flutter precache --web
 flutter doctor
 
-# Run build
+# Run build strictly
 flutter build web --release
 
 # Note: Vercel expects the build output in a specific directory.
