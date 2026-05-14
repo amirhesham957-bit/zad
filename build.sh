@@ -1,20 +1,16 @@
 #!/bin/bash
+set -e
 
-# Clone Flutter (shallow clone for speed)
+# Clone Flutter if not present
 if [ ! -d "flutter" ]; then
   git clone https://github.com/flutter/flutter.git -b stable --depth 1 flutter
 fi
 
-# Add Flutter to PATH
 export PATH="$PATH:`pwd`/flutter/bin"
 
-# Pre-download artifacts
+# Setup
 flutter precache --web
-flutter doctor
+flutter pub get
 
-# Run build strictly
+# Build for web (no shaders, no web-renderer flag)
 flutter build web --release
-
-# Note: Vercel expects the build output in a specific directory.
-# By default, Flutter builds to build/web.
-# We will point Vercel to this directory in vercel.json or here.
